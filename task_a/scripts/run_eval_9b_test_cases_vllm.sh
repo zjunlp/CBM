@@ -13,10 +13,9 @@ CONDA_PREFIX="${CONDA_PREFIX:-.conda/envs/swift}"
 PYTHON_BIN=$CONDA_PREFIX/bin/python
 export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:${LD_LIBRARY_PATH:-}
 
-CUDA_VISIBLE_DEVICES=2
-TEST_DATA=data/task_b_9B_test_cases
+CUDA_VISIBLE_DEVICES=1
+TEST_DATA=data/task_a_9B_test_cases
 EVAL_TYPES=(failed_stay failed_update failed_isolation)
-
 BASE_MODEL_PATH=${BASE_MODEL_PATH:-models/Qwen3.5-9B}
 LORA_SOURCE_TYPE=merged
 
@@ -35,7 +34,7 @@ LORA_PATHS=(
 )
 
 OUTPUT_DIRS=(
-  task_b/outputs/swift_train_a_with_thinking_exact_match_rollout_8_test_b_ckpt_520
+  task_a/outputs/swift_train_a_with_thinking_exact_match_rollout_8_test_a_ckpt_520
 )
 
 BASE_RESULT_DIR=
@@ -124,7 +123,7 @@ for idx in "${!EVAL_TARGETS[@]}"; do
   echo "[eval-test-cases] disable_custom_all_reduce=$DISABLE_CUSTOM_ALL_REDUCE"
 
   ARGS=(
-    task_b/training/eval_test_cases_vllm.py
+    task_a/training/eval_9b_test_cases_vllm.py
     --test-data "$TEST_DATA"
     --output-dir "$output_dir"
     --eval-target "$effective_target"

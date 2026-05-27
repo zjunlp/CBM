@@ -38,7 +38,7 @@ def augment_rd_failed_stay_depth(
     n_redundant: int,
     seed: int,
 ) -> Tuple[Optional[Dict[str, Any]], Optional[str]]:
-    if str(case.get("challenge_type", "")).lower() != "failed_stay":
+    if str(case.get("cbm_challenge_type", "")).lower() != "failed_stay":
         return None, "not_failed_stay"
     if n_redundant <= 0:
         return None, "n_redundant_non_positive"

@@ -48,7 +48,7 @@ Cases live under `analysis/outputs/task_{a,b}/{7B,9B}/{pipeline}/{failed_stay|fa
 
 | Setting | 7B | 9B |
 |---------|----|----|
-| Eval script | `analysis/eval/task_*_eval_7b_test_cases_vllm.py` | `analysis/eval/task_*_eval_test_cases_vllm.py` |
+| Eval script | `analysis/eval/task_*_eval_7b_test_cases_vllm.py` | `analysis/eval/task_*_eval_9b_test_cases_vllm.py` |
 | Base model | `Qwen2.5-7B-Instruct` | `Qwen3.5-9B` |
 | temperature | 0.3 | 1.0 |
 | max_tokens | 1024 | 30000 |

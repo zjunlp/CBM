@@ -2,7 +2,7 @@
 # Override paths and grids per experiment.
 
 pipeline: rd_failed_stay_depth
-scenario: a
+task: task_a
 model: 7B
 split: test
 challenge_type: failed_stay
@@ -18,7 +18,7 @@ n_redundant: [1, 5, 9]
 
 # Noise typology example (uncomment to use):
 # pipeline: noise_typology
-# scenario: b
+# task: task_b
 # challenge_type: failed_isolation
 # noise_types: [none, sycophancy, authority, stress]
 # turn_policy: host_comment

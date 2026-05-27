@@ -51,7 +51,7 @@ def infer_scenario(path: Path) -> str:
 
 
 def keep_scenario(path: Path, scenario: str) -> bool:
-    return scenario == "all" or infer_scenario(path) == f"scenario_{scenario}"
+    return scenario == "all" or infer_scenario(path) == f"task_{scenario}"
 
 
 def normalize_challenge(value: Any) -> str:
@@ -185,7 +185,14 @@ def build_records_for_case(path: Path, payload: Dict[str, Any], entry: Dict[str,
 
     case_id = base_case_id(payload, path)
     oracle = trajectory.get("oracle") or payload.get("oracle")
-    challenge = normalize_challenge(trajectory.get("challenge_type") or payload.get("challenge_type") or trajectory.get("mode") or payload.get("mode"))
+    challenge = normalize_challenge(
+        trajectory.get("cbm_challenge_type")
+        or payload.get("cbm_challenge_type")
+        or trajectory.get("challenge_type")
+        or payload.get("challenge_type")
+        or trajectory.get("mode")
+        or payload.get("mode")
+    )
     scenario = infer_scenario(path)
     question = probe_question(candidates)
     records: List[Dict[str, Any]] = []

@@ -89,12 +89,12 @@ analysis_apply_api_preset() {
 }
 
 analysis_resolve_eval_script() {
-  local scenario="$1"
+  local task="$1"
   local model="$2"
   if [[ "$model" == "7B" ]]; then
-    echo "analysis/eval/scenario_${scenario}_eval_7b_test_cases_vllm.py"
+    echo "analysis/eval/${task}_eval_7b_test_cases_vllm.py"
   else
-    echo "analysis/eval/scenario_${scenario}_eval_test_cases_vllm.py"
+    echo "analysis/eval/${task}_eval_9b_test_cases_vllm.py"
   fi
 }
 

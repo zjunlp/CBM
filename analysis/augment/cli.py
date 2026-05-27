@@ -38,17 +38,32 @@ PIPELINES = {
     "noise_typology": "failed_isolation",
 }
 
-
-def _failed_stay_pipeline_for_scenario(scenario: str) -> str:
-    return "cd_failed_stay_depth" if scenario == "b" else "rd_failed_stay_depth"
+TASK_NAMES = {"task_a": "Task_A", "task_b": "Task_B"}
 
 
-def _failed_update_pipeline_for_scenario(scenario: str) -> str:
-    return "cd_failed_update_depth" if scenario == "b" else "rd_failed_update_depth"
+def _normalize_task(value: Any) -> str:
+    text = str(value or "task_a").strip().lower()
+    if text in TASK_NAMES:
+        return text
+    raise ValueError(f"unsupported task: {value}")
+
+
+def _normalize_case_fields(case: Dict[str, Any], task: str) -> Dict[str, Any]:
+    out = dict(case)
+    out["task"] = _normalize_task(out.get("task") or task)
+    return out
+
+
+def _failed_stay_pipeline_for_task(task: str) -> str:
+    return "cd_failed_stay_depth" if task == "task_b" else "rd_failed_stay_depth"
+
+
+def _failed_update_pipeline_for_task(task: str) -> str:
+    return "cd_failed_update_depth" if task == "task_b" else "rd_failed_update_depth"
 
 
 def _case_output_dir(output_dir: Path, pipeline: str) -> Path:
-    """Place cases under challenge-type subdirs for eval_test_cases_vllm compatibility."""
+    """Place cases under challenge-type subdirs for vLLM eval compatibility."""
     challenge_type = PIPELINES.get(pipeline)
     if challenge_type:
         return output_dir / challenge_type
@@ -65,14 +80,14 @@ def _load_config(path: Optional[str]) -> Dict[str, Any]:
 def _resolve_input_dir(args: argparse.Namespace, config: Dict[str, Any]) -> Path:
     if args.input_dir:
         return Path(args.input_dir)
-    scenario = args.scenario or config.get("scenario", "a")
-    model = args.model or config.get("model", "7B")
+    task = _normalize_task(args.task or config.get("task", "task_a"))
     model = args.model or config.get("model", "7B")
     split = args.split or config.get("split", "test")
     challenge = args.challenge_type or config.get("challenge_type")
-    base = REPO_ROOT / "data" / f"scenario_{scenario}" / model / split
+    task_name = TASK_NAMES[task]
+    base = REPO_ROOT / "data" / "belief_training_task_dataset" / task_name / model / split
     if challenge:
-        return base / challenge
+        return base / str(challenge)
     return base
 
 
@@ -87,10 +102,10 @@ def _output_pipeline_name(pipeline: str) -> str:
 def _resolve_output_dir(args: argparse.Namespace, config: Dict[str, Any], pipeline: str) -> Path:
     if args.output_dir:
         return Path(args.output_dir)
-    scenario = args.scenario or config.get("scenario", "a")
+    task = _normalize_task(args.task or config.get("task", "task_a"))
     model = args.model or config.get("model", "7B")
     folder = _output_pipeline_name(pipeline)
-    return REPO_ROOT / "analysis" / "outputs" / f"scenario_{scenario}" / model / folder
+    return REPO_ROOT / "analysis" / "outputs" / task / model / folder
 
 
 def _augment_one(
@@ -132,12 +147,12 @@ def run_augment(args: argparse.Namespace) -> int:
     pipeline = args.pipeline or config.get("pipeline")
     if not pipeline:
         raise ValueError("pipeline is required")
-    scenario = args.scenario or config.get("scenario", "a")
+    task = _normalize_task(args.task or config.get("task", "task_a"))
     model = args.model or config.get("model", "7B")
     if pipeline == "failed_stay_depth":
-        pipeline = _failed_stay_pipeline_for_scenario(str(scenario))
+        pipeline = _failed_stay_pipeline_for_task(task)
     elif pipeline == "failed_update_depth":
-        pipeline = _failed_update_pipeline_for_scenario(str(scenario))
+        pipeline = _failed_update_pipeline_for_task(task)
 
     input_dir = _resolve_input_dir(args, config)
     output_dir = _resolve_output_dir(args, config, pipeline)
@@ -156,11 +171,12 @@ def run_augment(args: argparse.Namespace) -> int:
     attempted_source_count = 0
     successful_source_count = 0
     for path in iter_input_cases(input_dir):
-        case = load_case(path)
+        case = _normalize_case_fields(load_case(path), task)
         if pipeline == "noise_typology":
-            case = normalize_failed_isolation_source_case(path, case, str(scenario))
+            case = normalize_failed_isolation_source_case(path, case, task)
+            case = _normalize_case_fields(case, task)
         expected_type = PIPELINES.get(pipeline)
-        if expected_type and str(case.get("challenge_type", "")).lower() != expected_type:
+        if expected_type and str(case.get("cbm_challenge_type", "")).lower() != expected_type:
             continue
         if max_source_cases is not None and successful_source_count >= int(max_source_cases):
             break
@@ -264,7 +280,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         choices=list(PIPELINES.keys()) + ["failed_stay_depth", "failed_update_depth"],
     )
-    parser.add_argument("--scenario", choices=["a", "b"], default=None)
+    parser.add_argument("--task", choices=["task_a", "task_b"], default=None)
     parser.add_argument("--model", type=str, default=None)
     parser.add_argument("--split", type=str, default=None)
     parser.add_argument("--challenge-type", type=str, default=None)

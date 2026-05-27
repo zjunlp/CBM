@@ -33,7 +33,7 @@ def augment_rd_failed_update_depth(
     delay_turns: int,
     seed: int,
 ) -> Tuple[Optional[Dict[str, Any]], Optional[str]]:
-    if str(case.get("challenge_type", "")).lower() != "failed_update":
+    if str(case.get("cbm_challenge_type", "")).lower() != "failed_update":
         return None, "not_failed_update"
     if delay_turns <= 0:
         return None, "delay_turns_non_positive"

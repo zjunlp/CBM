@@ -2,7 +2,7 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
-SCENARIO="${SCENARIO:-a}"
+TASK="${TASK:-task_a}"
 MODEL="${MODEL:-7B}"
 SEED="${SEED:-42}"
 SOURCE_LIMIT="${MAX_SOURCE_CASES:-${MAX_CASES:-0}}"
@@ -13,7 +13,7 @@ fi
 python -m analysis.augment.cli \
   --config analysis/configs/failed_stay_depth.yaml \
   --pipeline failed_stay_depth \
-  --scenario "$SCENARIO" \
+  --task "$TASK" \
   --model "$MODEL" \
   --challenge-type failed_stay \
   --seed "$SEED" \

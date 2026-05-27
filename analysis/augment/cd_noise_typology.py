@@ -121,7 +121,7 @@ def augment_noise_typology(
     turn_policy: str = "host_comment",
     template_dir: Optional[Path] = None,
 ) -> Tuple[Optional[Dict[str, Any]], Optional[str]]:
-    if str(case.get("challenge_type", "")).lower() != "failed_isolation":
+    if str(case.get("cbm_challenge_type", "")).lower() != "failed_isolation":
         return None, "not_failed_isolation"
     if noise_type not in NOISE_TYPES:
         return None, "invalid_noise_type"
@@ -134,8 +134,8 @@ def augment_noise_typology(
     rng = random.Random(seed)
     templates = _load_templates(noise_type, template_dir)
 
-    scenario = "a" if "rule-guessing" in str(case.get("system_prompt", "")).lower() else "b"
-    rd_style = scenario == "a"
+    task = "task_a" if "rule-guessing" in str(case.get("system_prompt", "")).lower() else "task_b"
+    rd_style = task == "task_a"
     target_indices = _target_turn_indices(turns, turn_policy)
     source_file = str(case.get("source_file", ""))
     is_api_case = "/api/" in source_file.replace("\\", "/")

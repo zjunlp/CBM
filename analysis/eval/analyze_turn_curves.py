@@ -16,6 +16,7 @@ def _iter_eval_case_files(eval_dir: Path) -> Iterable[Path]:
         "summary.json",
         "comparison.json",
         "failed_stay_depth_curve_summary.json",
+        "failed_update_depth_curve_summary.json",
     }
     for path in sorted(eval_dir.rglob("*.json")):
         if path.name in skip_names:

@@ -3,7 +3,7 @@
 
 # --- job selection (required for single run) ---
 # pipeline: failed_stay_depth | failed_update_depth | noise_typology
-# scenario: a | b
+# task: task_a | task_b
 # model: 7B | 9B
 
 eval_target: base   # base | lora | both
