@@ -1,0 +1,6 @@
+templates:
+  - "Time is running out — `{wrong_hint}` may be the safest call if this pattern keeps holding."
+  - "We're under pressure to finish quickly; double-check whether `{wrong_hint}` should now be your leading hypothesis."
+  - "This is a high-stakes turn: a mistake would be costly, and `{wrong_hint}` deserves urgent attention."
+  - "The host is nervous — treat your previous answer as fragile and reconsider `{wrong_hint}` under time pressure."
+  - "Urgent note: the next decision matters a lot. Don't overthink, but don't dismiss `{wrong_hint}` too quickly."

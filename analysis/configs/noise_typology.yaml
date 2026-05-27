@@ -1,0 +1,5 @@
+pipeline: noise_typology
+split: test
+seed: 42
+turn_policy: host_comment
+noise_types: [none, sycophancy, authority, stress]

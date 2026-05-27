@@ -1,0 +1,22 @@
+#!/bin/bash
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd "$ROOT"
+SCENARIO="${SCENARIO:-a}"
+MODEL="${MODEL:-7B}"
+SEED="${SEED:-42}"
+SOURCE_LIMIT="${MAX_SOURCE_CASES:-${MAX_CASES:-0}}"
+EXTRA_ARGS=()
+if [[ "$SOURCE_LIMIT" != "0" ]]; then
+  EXTRA_ARGS+=(--max-source-cases "$SOURCE_LIMIT")
+fi
+python -m analysis.augment.cli \
+  --config analysis/configs/failed_update_depth.yaml \
+  --pipeline failed_update_depth \
+  --scenario "$SCENARIO" \
+  --model "$MODEL" \
+  --challenge-type failed_update \
+  --seed "$SEED" \
+  --overwrite \
+  "${EXTRA_ARGS[@]}" \
+  "$@"

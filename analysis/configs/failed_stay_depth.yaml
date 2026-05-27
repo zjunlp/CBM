@@ -1,0 +1,5 @@
+pipeline: failed_stay_depth
+split: test
+seed: 42
+# redundant depth grid
+n_redundant: [1, 5, 9]

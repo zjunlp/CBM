@@ -1,0 +1,22 @@
+#!/bin/bash
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd "$ROOT"
+SCENARIO="${SCENARIO:-a}"
+MODEL="${MODEL:-7B}"
+SEED="${SEED:-42}"
+SOURCE_LIMIT="${MAX_SOURCE_CASES:-${MAX_CASES:-0}}"
+EXTRA_ARGS=()
+if [[ "$SOURCE_LIMIT" != "0" ]]; then
+  EXTRA_ARGS+=(--max-source-cases "$SOURCE_LIMIT")
+fi
+python -m analysis.augment.cli \
+  --config analysis/configs/noise_typology.yaml \
+  --pipeline noise_typology \
+  --scenario "$SCENARIO" \
+  --model "$MODEL" \
+  --challenge-type failed_isolation \
+  --seed "$SEED" \
+  --overwrite \
+  "${EXTRA_ARGS[@]}" \
+  "$@"

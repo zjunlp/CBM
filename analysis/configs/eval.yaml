@@ -1,0 +1,39 @@
+# Default vLLM eval settings for analysis experiments.
+# Override via env when calling run_eval_analysis.sh / run_eval_all_analysis.sh.
+
+# --- job selection (required for single run) ---
+# pipeline: failed_stay_depth | failed_update_depth | noise_typology
+# scenario: a | b
+# model: 7B | 9B
+
+eval_target: base   # base | lora | both
+run_label: base     # output subfolder under .../eval/
+repeats: 3
+
+# --- GPU ---
+cuda_visible_devices: 6
+
+# --- LoRA / merged checkpoint (when eval_target != base) ---
+lora_source_type: merged
+# lora_path: task_a/training/checkpoints/.../checkpoint-350_merged
+
+# --- vLLM ---
+tensor_parallel_size: 1
+gpu_memory_utilization: 0.90
+model_dtype: bfloat16
+disable_custom_all_reduce: true
+
+# 7B overrides (when model=7B):
+# base_model_path: models/Qwen2.5-7B-Instruct
+# max_model_len: 32000
+# agent_temperature: 0.3
+# agent_max_tokens: 1024
+# prompt_enhancement: false
+
+# 9B overrides (when model=9B):
+# base_model_path: models/Qwen3.5-9B
+# max_model_len: 81920
+# agent_temperature: 1.0
+# agent_max_tokens: 30000
+# prompt_enhancement: true
+# enable_thinking: auto

@@ -1,0 +1,5 @@
+pipeline: failed_update_depth
+split: test
+seed: 42
+# correction delay grid
+delay_turns: [1, 3, 5]

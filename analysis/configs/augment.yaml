@@ -1,0 +1,24 @@
+# Default augmentation config for analysis pipelines.
+# Override paths and grids per experiment.
+
+pipeline: rd_failed_stay_depth
+scenario: a
+model: 7B
+split: test
+challenge_type: failed_stay
+seed: 42
+
+# FailedStay depth: one max-depth case is generated per source case; summaries project these depths.
+n_redundant: [1, 5, 9]
+
+# FailedUpdate depth example (uncomment to use):
+# pipeline: rd_failed_update_depth
+# challenge_type: failed_update
+# delay_turns: [3, 5, 8]
+
+# Noise typology example (uncomment to use):
+# pipeline: noise_typology
+# scenario: b
+# challenge_type: failed_isolation
+# noise_types: [none, sycophancy, authority, stress]
+# turn_policy: host_comment

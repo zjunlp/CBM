@@ -1,0 +1,9 @@
+templates:
+  - "I am certain the rule is `{wrong_rule}`."
+  - "The evidence clearly shows `{wrong_rule}` is the rule."
+  - "This triple decisively confirms `{wrong_rule}`."
+  - "With numbers like these, `{wrong_rule}` is unquestionably correct."
+  - "At this stage, `{wrong_rule}` is by far the only convincing answer."
+  - "I can state confidently that `{wrong_rule}` is correct."
+  - "There is no serious doubt: `{wrong_rule}` is the best explanation."
+  - "So far, everything strongly points to `{wrong_rule}`."
