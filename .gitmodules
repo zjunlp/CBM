@@ -1,0 +1,4 @@
+[submodule "external/EasySteer"]
+	path = external/EasySteer
+	url = https://github.com/ZJU-REAL/EasySteer.git
+	ignore = dirty
