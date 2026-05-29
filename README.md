@@ -1,8 +1,4 @@
-<h1 align="center">BeliefTrack</h1>
-
-<p align="center">
-  Official implementation for Contextual Belief Management in Large Language Models
-</p>
+<h1 align="center">Contextual Belief Management</h1>
 
 <p align="center">
   <a href="https://arxiv.org/abs/2605.30219">📄arXiv</a> •
