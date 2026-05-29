@@ -257,7 +257,7 @@ If you find this repository useful, please cite our paper:
 ```bibtex
 @article{xu2026whenshouldmodelschange,
   title={When Should Models Change Their Minds? Contextual Belief Management in Large Language Models},
-  author={Xu, Haoming and Xu, Weihong and Li, Zongrui and Wang, Mengru and Yao, Yunzhi and Wu, Chiyu and Shang, Jin and Gong, Yu and Deng, Shumin},
+  author={Haoming Xu and Weihong Xu and Zongrui Li and Mengru Wang and Yunzhi Yao and Chiyu Wu and Jin Shang and Yu Gong and Shumin Deng},
   journal={arXiv preprint arXiv:2605.30219},
   year={2026}
 }
