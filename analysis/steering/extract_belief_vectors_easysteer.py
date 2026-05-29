@@ -19,7 +19,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-EASYSTEER_ROOT = Path(os.environ.get("EASYSTEER_ROOT", REPO_ROOT / "external" / "EasySteer"))
+EASYSTEER_ROOT = Path(os.environ.get("EASYSTEER_ROOT", REPO_ROOT / "analysis" / "steering" / "EasySteer"))
 for _path in (EASYSTEER_ROOT / "vllm-steer", EASYSTEER_ROOT):
     if _path.exists() and str(_path) not in sys.path:
         sys.path.insert(0, str(_path))

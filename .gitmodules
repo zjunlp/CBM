@@ -1,4 +1,4 @@
-[submodule "external/EasySteer"]
-	path = external/EasySteer
+[submodule "analysis/steering/EasySteer"]
+	path = analysis/steering/EasySteer
 	url = https://github.com/ZJU-REAL/EasySteer.git
 	ignore = dirty
