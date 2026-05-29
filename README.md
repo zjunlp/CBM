@@ -10,111 +10,13 @@
   <a href="https://huggingface.co/collections/zjunlp/contextualbeliefmanagement">🤗HF Collection</a>
 </p>
 
-<div align="center">
-
-![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
-![Tasks](https://img.shields.io/badge/Tasks-Rule%20Discovery%20%7C%20Circuit%20Diagnosis-green)
-![Training](https://img.shields.io/badge/Training-GRPO-orange)
-
-</div>
-
 This repository provides the official implementation of our paper:
 
 > **When Should Models Change Their Minds? Contextual Belief Management in Large Language Models**
 >
 > Haoming Xu, Weihong Xu, Zongrui Li, Mengru Wang, Yunzhi Yao, Chiyu Wu, Jin Shang, Yu Gong, Shumin Deng
 
-## Table of Contents
-
-- [News](#news)
-- [Overview](#overview)
-- [Open Resources](#open-resources)
-- [Repository Layout](#repository-layout)
-- [Installation](#installation)
-- [Data](#data)
-- [Training](#training)
-- [Evaluation](#evaluation)
-- [Analysis](#analysis)
-- [Citation](#citation)
-
 ---
-
-## News
-
-- **[2026-05]** We release our paper, [**When Should Models Change Their Minds? Contextual Belief Management in Large Language Models**](https://arxiv.org/abs/2605.30219).
-- **[2026-05]** We release the Hugging Face collection for BeliefTrack resources: [ContextualBeliefManagement](https://huggingface.co/collections/zjunlp/contextualbeliefmanagement).
-- **[2026-05]** We reorganize analysis code into `analysis/depth_and_noise`, `analysis/probing`, and `analysis/steering`.
-
-## Overview
-
-BeliefTrack studies **Contextual Belief Management (CBM)**: whether a language model can maintain the belief state that is justified by formal evidence in a multi-turn context.
-
-The benchmark is closed-world. Each episode defines a finite belief space:
-
-```text
-B_E = {h_1, h_2, ..., h_M}
-```
-
-At each turn, the model outputs a predicted belief state:
-
-```text
-S_hat_t subseteq B_E
-```
-
-A symbolic verifier computes the oracle belief state:
-
-```text
-S*_t subseteq B_E
-```
-
-The model is correct only when the predicted set exactly matches the oracle set. This makes the benchmark independent of open-ended factual knowledge and focuses evaluation on evidence-consistent belief tracking.
-
-BeliefTrack covers two task environments:
-
-| Directory | Task | Belief Space | Formal Evidence |
-|-----------|------|--------------|-----------------|
-| `task_a/` | Rule Discovery | Candidate rules over number triples | `(a, b, c): YES/NO` |
-| `task_b/` | Circuit Diagnosis | Candidate circuit faults | Meter readings and corrections |
-
-The benchmark targets three CBM failure modes:
-
-| Failure Mode | Dataset Split | Question |
-|--------------|---------------|----------|
-| Failed Stay | `failed_stay` | Does the model preserve its belief state when later evidence is redundant? |
-| Failed Update | `failed_update` | Does the model revise its belief state when old evidence is corrected? |
-| Failed Isolation | `failed_isolation` | Does the model ignore task-irrelevant noise while using the same formal evidence? |
-
-Across multiple LLMs, the paper finds that vanilla models exhibit substantial CBM failures. Reinforcement learning with belief-state rewards reduces failure rates, and representation-level steering further improves belief-state control.
-
-## Open Resources
-
-All public resources are collected in the Hugging Face collection:
-
-> [https://huggingface.co/collections/zjunlp/contextualbeliefmanagement](https://huggingface.co/collections/zjunlp/contextualbeliefmanagement)
-
-The collection is the recommended entry point for released datasets, models, and related artifacts.
-
-### Dataset
-
-The Hugging Face-friendly dataset export contains four configurations:
-
-| Config | Task | Splits |
-|--------|------|--------|
-| `task_a_7b` | Rule Discovery | train/test |
-| `task_a_9b` | Rule Discovery | train/test |
-| `task_b_7b` | Circuit Diagnosis | train/test |
-| `task_b_9b` | Circuit Diagnosis | train/test |
-
-Example:
-
-```python
-from datasets import load_dataset
-
-ds = load_dataset("zjunlp/BeliefTrack", "task_a_7b")
-print(ds["train"][0])
-```
-
-Replace `zjunlp/BeliefTrack` with the dataset repository id listed in the Hugging Face collection if the released dataset uses a different name.
 
 ## Repository Layout
 
@@ -162,16 +64,8 @@ Create the Python environment:
 
 ```bash
 conda env create -f environment.yml
-conda activate swift
+conda activate belief_training
 ```
-
-Most training and evaluation scripts expect the environment location through `CONDA_PREFIX`. If needed, override it explicitly:
-
-```bash
-export CONDA_PREFIX=/path/to/conda/envs/swift
-```
-
-GPU evaluation and RL training use vLLM / Swift-style dependencies. Training launchers expose most model paths, GPU ids, ports, and output directories as environment variables. Evaluation launchers expose `BASE_MODEL_PATH`, while split paths, repeat counts, and output arrays are currently configured inside the corresponding shell scripts.
 
 ## Data
 
@@ -215,15 +109,11 @@ To export a Hugging Face Dataset-friendly package:
 python scripts/export_hf_dataset.py
 ```
 
-This writes `data/belieftrack_hf/` with four loadable configurations:
+This writes `data/belieftrack_hf/` with loadable configurations. The primary 9B configurations are:
 
 ```text
-task_a_7b/train.jsonl
-task_a_7b/test.jsonl
 task_a_9b/train.jsonl
 task_a_9b/test.jsonl
-task_b_7b/train.jsonl
-task_b_7b/test.jsonl
 task_b_9b/train.jsonl
 task_b_9b/test.jsonl
 ```
@@ -237,12 +127,12 @@ Training uses multi-turn online GRPO with task-specific symbolic rewards.
 ### Task A: Rule Discovery
 
 ```bash
-MODEL=/path/to/Qwen2.5-7B-Instruct \
-DATASET=data/task_a_7B_train_cases/train_cases_7B.json \
-OUTPUT_DIR=task_a/training/checkpoints_multi_turn_online_swift_grpo_7B \
+MODEL=/path/to/Qwen3.5-9B \
+DATASET=data/task_a_9B_train_cases/train_cases_9B_thinking.json \
+OUTPUT_DIR=task_a/training/checkpoints_multi_turn_online_swift_grpo \
 TRAIN_GPUS=2,3 \
 VLLM_GPU=1 \
-bash task_a/scripts/run_multi_turn_online_grpo_swift_7b.sh
+bash task_a/scripts/run_multi_turn_online_grpo_swift.sh
 ```
 
 The reward entry point is:
@@ -254,12 +144,12 @@ task_a/training/reward.py:task_a_belief_reward
 ### Task B: Circuit Diagnosis
 
 ```bash
-MODEL=/path/to/Qwen2.5-7B-Instruct \
-DATASET=data/task_b_7B_train_cases/train_cases_7B.json \
-OUTPUT_DIR=task_b/training/checkpoints_multi_turn_online_swift_grpo_7B \
+MODEL=/path/to/Qwen3.5-9B \
+DATASET=data/task_b_9B_train_cases/train_cases_9B_thinking.json \
+OUTPUT_DIR=task_b/training/checkpoints_multi_turn_online_swift_grpo \
 TRAIN_GPUS=2,3 \
 VLLM_GPU=1 \
-bash task_b/scripts/run_multi_turn_online_grpo_swift_7b.sh
+bash task_b/scripts/run_multi_turn_online_grpo_swift.sh
 ```
 
 The reward entry point is:
@@ -268,7 +158,7 @@ The reward entry point is:
 task_b/training/reward.py
 ```
 
-The launcher scripts also provide 9B variants and exact-match variants where available:
+The launcher scripts also provide exact-match variants where available:
 
 ```text
 task_a/scripts/run_multi_turn_online_grpo_swift.sh
@@ -283,25 +173,11 @@ Evaluation runs each model over the three CBM splits and reports failure rates. 
 ### Task A
 
 ```bash
-BASE_MODEL_PATH=/path/to/Qwen2.5-7B-Instruct \
-bash task_a/scripts/run_eval_7b_test_cases_vllm.sh
-```
-
-For 9B-style evaluation:
-
-```bash
 BASE_MODEL_PATH=/path/to/Qwen3.5-9B \
 bash task_a/scripts/run_eval_9b_test_cases_vllm.sh
 ```
 
 ### Task B
-
-```bash
-BASE_MODEL_PATH=/path/to/Qwen2.5-7B-Instruct \
-bash task_b/scripts/run_eval_7b_test_cases_vllm.sh
-```
-
-For 9B-style evaluation:
 
 ```bash
 BASE_MODEL_PATH=/path/to/Qwen3.5-9B \
@@ -319,13 +195,13 @@ The analysis code is split into three independent workflows.
 `analysis/depth_and_noise/` contains positional-depth augmentation and noise-typology diagnostics.
 
 ```bash
-TASK=task_a MODEL=7B MAX_SOURCE_CASES=1 \
+TASK=task_a MODEL=9B MAX_SOURCE_CASES=1 \
 bash analysis/depth_and_noise/scripts/run_failed_stay_depth.sh
 
-TASK=task_a MODEL=7B MAX_SOURCE_CASES=1 \
+TASK=task_a MODEL=9B MAX_SOURCE_CASES=1 \
 bash analysis/depth_and_noise/scripts/run_failed_update_depth.sh
 
-TASK=task_a MODEL=7B MAX_SOURCE_CASES=1 \
+TASK=task_a MODEL=9B MAX_SOURCE_CASES=1 \
 bash analysis/depth_and_noise/scripts/run_noise_typology.sh
 ```
 
@@ -375,20 +251,8 @@ You can override the EasySteer path when needed:
 export EASYSTEER_ROOT=/path/to/EasySteer
 ```
 
-## Development Checks
-
-Run lightweight syntax checks before committing:
-
-```bash
-python -m py_compile $(rg --files task_a task_b utils analysis/depth_and_noise analysis/probing analysis/steering -g '*.py' -g '!analysis/steering/EasySteer/**')
-bash -n task_a/scripts/*.sh task_b/scripts/*.sh analysis/depth_and_noise/scripts/*.sh analysis/probing/scripts/*.sh
-```
-
-Check submodules:
-
-```bash
-git submodule status --recursive
-```
+## 🙏 Acknowledgements
+We would like to express our heartfelt gratitude for the contribution of [ms-swift](https://github.com/modelscope/ms-swift),  [VLLM](https://github.com/vllm-project/vllm), [lm-evaluation-harness](https://github.com/EleutherAI/lm-evaluation-harness), [EasySteer](https://github.com/ZJU-REAL/EasySteer) to our project, as we have utilized portions of their source code in our project.
 
 ## Citation
 

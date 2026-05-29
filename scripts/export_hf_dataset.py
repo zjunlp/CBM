@@ -234,7 +234,7 @@ The `7B` and `9B` names identify the experimental data-generation/evaluation set
 ```python
 from datasets import load_dataset
 
-ds = load_dataset("YOUR_ORG/BeliefTrack", "task_a_7b")
+ds = load_dataset("YOUR_ORG/BeliefTrack", "task_a_9b")
 print(ds["train"][0])
 ```
 
@@ -246,8 +246,8 @@ from datasets import load_dataset
 ds = load_dataset(
     "json",
     data_files={
-        "train": "task_a_7b/train.jsonl",
-        "test": "task_a_7b/test.jsonl",
+        "train": "task_a_9b/train.jsonl",
+        "test": "task_a_9b/test.jsonl",
     },
 )
 ```
