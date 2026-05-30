@@ -18,10 +18,9 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-EASYSTEER_ROOT = Path(os.environ.get("EASYSTEER_ROOT", REPO_ROOT / "analysis" / "steering" / "EasySteer"))
-for _path in (EASYSTEER_ROOT / "vllm-steer", EASYSTEER_ROOT):
-    if _path.exists() and str(_path) not in sys.path:
-        sys.path.insert(0, str(_path))
+from analysis.steering.easysteer_paths import add_easysteer_to_sys_path  # noqa: E402
+
+EASYSTEER_ROOT = add_easysteer_to_sys_path()
 
 import torch
 
@@ -407,9 +406,12 @@ def build_result_rows(
             "vector_source": vector_source,
             "record_id": record["record_id"],
             "case_id": record["case_id"],
-            "repeat_index": record["repeat_index"],
+            "source_tag": record.get("source_tag"),
+            "source_index": record.get("source_index"),
+            "repeat_index": int(record.get("repeat_index", 0)),
             "challenge_type": record["challenge_type"],
             "target_turn": record["target_turn"],
+            "num_turns": int(record.get("num_turns") or len(record.get("turns") or [])),
             "prompt_token_length": int(prompt_lengths[record_id]),
             "golden_hypotheses": golden,
             "parsed_hypotheses": parsed,
@@ -587,7 +589,7 @@ def failed_isolation_build_result_rows(
             "case_id": record["case_id"],
             "source_tag": record.get("source_tag"),
             "source_index": record.get("source_index"),
-            "repeat_index": record["repeat_index"],
+            "repeat_index": int(record.get("repeat_index", 0)),
             "challenge_type": record["challenge_type"],
             "target_turn": record["target_turn"],
             "num_turns": int(record.get("num_turns") or len(record.get("turns") or [])),

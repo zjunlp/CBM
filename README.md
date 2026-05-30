@@ -34,7 +34,6 @@ This repository provides the official implementation of our paper:
 │   ├── depth_and_noise/            # Positional-depth and noise-typology diagnostics
 │   ├── probing/                    # Post-answer belief probing
 │   └── steering/                   # Activation steering workflows
-│       └── EasySteer/              # Git submodule: https://github.com/ZJU-REAL/EasySteer
 ├── data/                           # Train/test cases and experiment outputs
 ├── utils/                          # Shared I/O and model backend utilities
 ├── environment.yml                 # Conda environment snapshot
@@ -43,17 +42,11 @@ This repository provides the official implementation of our paper:
 
 ## Installation
 
-Clone the repository with submodules:
+Clone the repository:
 
 ```bash
-git clone --recursive https://github.com/zjunlp/CBM.git
+git clone https://github.com/zjunlp/CBM.git
 cd CBM
-```
-
-If the repository was cloned without submodules, initialize EasySteer manually:
-
-```bash
-git submodule update --init --recursive analysis/steering/EasySteer
 ```
 
 Create the Python environment:
@@ -228,23 +221,36 @@ More details are in `analysis/probing/README.md`.
 
 ### Steering
 
-`analysis/steering/` contains activation-steering workflows. EasySteer is stored as a Git submodule:
+`analysis/steering/` contains activation-steering workflows. EasySteer is not stored as a Git submodule in this repository. Install it as a separate local checkout and point the steering scripts to that checkout.
 
-```text
-analysis/steering/EasySteer
-```
-
-The local steering scripts default to that path:
-
-```text
-analysis/steering/extract_belief_vectors_easysteer.py
-analysis/steering/run_steering_intervention_easysteer.py
-```
-
-You can override the EasySteer path when needed:
+To create an EasySteer environment and clone/install EasySteer:
 
 ```bash
-export EASYSTEER_ROOT=/path/to/EasySteer
+REPO_PARENT_DIR=/path/to/repos \
+ENV_NAME=easysteer_test \
+bash analysis/steering/scripts/setup_easysteer_env.sh
+```
+
+The setup script creates or reuses the conda environment, installs `vllm==0.17.1`, installs `cuda-toolkit=12.8`, upgrades `transformers`, clones EasySteer with submodules into `$REPO_PARENT_DIR/EasySteer`, installs EasySteer in editable mode, applies the Qwen3.5 compatibility patch, and writes the local path config.
+
+The EasySteer path is configured by `analysis/steering/easysteer_config.json`:
+
+```json
+{
+  "easysteer_root": "/path/to/repos/EasySteer"
+}
+```
+
+You can also override the configured path for a single run:
+
+```bash
+export EASYSTEER_ROOT=/path/to/repos/EasySteer
+```
+
+For a one-case smoke test of vector extraction and injection:
+
+```bash
+bash analysis/steering/scripts/run_easysteer_smoke.sh
 ```
 
 ## 🙏 Acknowledgements

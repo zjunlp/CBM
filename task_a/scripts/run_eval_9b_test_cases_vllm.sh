@@ -14,9 +14,9 @@ PYTHON_BIN=$CONDA_PREFIX/bin/python
 export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:${LD_LIBRARY_PATH:-}
 
 CUDA_VISIBLE_DEVICES=1
-TEST_DATA=data/task_a_9B_test_cases
+TEST_DATA=/Path/To/data/Task_A/9B/test
 EVAL_TYPES=(failed_stay failed_update failed_isolation)
-BASE_MODEL_PATH=${BASE_MODEL_PATH:-models/Qwen3.5-9B}
+BASE_MODEL_PATH=${BASE_MODEL_PATH:-/Path/To/Qwen3.5-9B}
 LORA_SOURCE_TYPE=merged
 
 # EVAL_TARGETS, LORA_PATHS and OUTPUT_DIRS are aligned by index.
@@ -26,15 +26,15 @@ LORA_SOURCE_TYPE=merged
 # base result directory, base evaluation will be skipped when possible.
 CKPT_NUM=350
 EVAL_TARGETS=(
-  lora
+  base
 )
 
 LORA_PATHS=(
-  "task_a/training/checkpoints_multi_turn_online_swift_grpo_9B_thinking_exact_match_rollout_8/v0-20260524-010221/checkpoint-520_merged"
+  "/Path/To/checkpoint-520_merged"
 )
 
 OUTPUT_DIRS=(
-  task_a/outputs/swift_train_a_with_thinking_exact_match_rollout_8_test_a_ckpt_520
+  /Path/To/outputs
 )
 
 BASE_RESULT_DIR=

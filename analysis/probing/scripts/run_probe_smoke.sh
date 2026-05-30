@@ -4,13 +4,13 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 cd "$ROOT"
 
-CONDA_PREFIX=/disk4/xuweihong/envs/miniconda3/envs/swift
-PYTHON_BIN="${PYTHON_BIN:-/disk4/xuweihong/envs/miniconda3/envs/swift/bin/python}"
+CONDA_PREFIX="${CONDA_PREFIX:-/data/xuhaoming/miniconda3/envs/belief_training}"
+PYTHON_BIN="${PYTHON_BIN:-$CONDA_PREFIX/bin/python}"
 export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:${LD_LIBRARY_PATH:-}
 GPU="${GPU:-2}"
-MODEL_PATH="${MODEL_PATH:-/disk1/xuhaoming/models/Qwen3.5-9B}"
+MODEL_PATH="${MODEL_PATH:-/mnt/quarkfs/share_model/Qwen3.5-9B}"
 
-SOURCE_DIR="${SOURCE_DIR:-analysis/depth_and_noise/outputs/task_a/9B/failed_stay_depth/eval/base_smoke/base/failed_stay}"
+SOURCE_DIR="${SOURCE_DIR:-data/BeliefTrackDataset/Task_A/7B/test/failed_stay}"
 OUT_ROOT="${OUT_ROOT:-analysis/probing/outputs/smoke}"
 DATASET_PATH="${DATASET_PATH:-$OUT_ROOT/belief_probe_dataset.json}"
 SUMMARY_PATH="${SUMMARY_PATH:-$OUT_ROOT/belief_probe_dataset.summary.json}"

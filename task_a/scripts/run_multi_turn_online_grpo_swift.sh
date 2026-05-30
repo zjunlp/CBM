@@ -7,7 +7,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 cd "$PROJECT_ROOT"
 
-CONDA_PREFIX="${CONDA_PREFIX:-/disk4/xuweihong/envs/miniconda3/envs/swift}"
+CONDA_PREFIX="${CONDA_PREFIX:-/Path/To/conda/envs/belief_training}"
 export LD_LIBRARY_PATH="$CONDA_PREFIX/lib:${LD_LIBRARY_PATH:-}"
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 export PYTORCH_ALLOC_CONF=expandable_segments:True
@@ -19,9 +19,9 @@ export NCCL_DEBUG=WARN
 SWIFT_BIN=$CONDA_PREFIX/bin/swift
 PYTHON_BIN=$CONDA_PREFIX/bin/python
 
-MODEL=${MODEL:-/disk1/xuhaoming/models/Qwen3.5-9B}
-DATASET=${DATASET:-data/task_a_9B_train_cases/train_cases_9B_thinking.json}
-OUTPUT_DIR=${OUTPUT_DIR:-task_a/training/checkpoints_multi_turn_online_swift_grpo_9B_thinking_rollout_8}
+MODEL=${MODEL:-/Path/To/Qwen3.5-9B}
+DATASET=${DATASET:-/Path/To/data/scenario_a_9B_train_cases/train_cases_9B_thinking.json}
+OUTPUT_DIR=${OUTPUT_DIR:-/Path/To/checkpoints_multi_turn_online_swift_grpo_9B_thinking_rollout_8}
 REWARD_PLUGIN=task_a/training/reward.py
 REWARD_FUNC=${REWARD_FUNC:-task_a_belief_reward}
 USE_TEMPLATE_PATCH=${USE_TEMPLATE_PATCH:-1}

@@ -14,10 +14,10 @@ PYTHON_BIN=$CONDA_PREFIX/bin/python
 export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:${LD_LIBRARY_PATH:-}
 
 CUDA_VISIBLE_DEVICES=1
-TEST_DATA=data/task_a_7B_test_cases
+TEST_DATA=/Path/To/data/Task_A/7B/test
 EVAL_TYPES=(failed_stay failed_update failed_isolation)
 
-BASE_MODEL_PATH=${BASE_MODEL_PATH:-models/Qwen2.5-7B-Instruct}
+BASE_MODEL_PATH=${BASE_MODEL_PATH:-/Path/To/Qwen2.5-7B-Instruct}
 LORA_SOURCE_TYPE=merged
 
 EVAL_TARGETS=(
@@ -29,7 +29,7 @@ LORA_PATHS=(
 )
 
 OUTPUT_DIRS=(
-  task_a/outputs/test_7B_prompt_enhanced_refined_v2
+  /Path/To/outputs
 )
 
 BASE_RESULT_DIR=
