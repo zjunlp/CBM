@@ -188,12 +188,6 @@ You can also override the configured path for a single run:
 export EASYSTEER_ROOT=/path/to/repos/EasySteer
 ```
 
-For a one-case smoke test of vector extraction and injection:
-
-```bash
-bash analysis/steering/scripts/run_easysteer_smoke.sh
-```
-
 ## 🙏 Acknowledgements
 We would like to express our heartfelt gratitude for the contribution of [ms-swift](https://github.com/modelscope/ms-swift),  [VLLM](https://github.com/vllm-project/vllm), [lm-evaluation-harness](https://github.com/EleutherAI/lm-evaluation-harness), [EasySteer](https://github.com/ZJU-REAL/EasySteer) to our project, as we have utilized portions of their source code in our project.
 
