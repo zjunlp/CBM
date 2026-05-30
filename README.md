@@ -65,22 +65,13 @@ conda activate belief_training
 
 ## Data
 
-The repository expects train/test cases under `data/`:
-
-```text
-data/
-├── task_a_7B_train_cases/
-├── task_a_7B_test_cases/
-│   ├── failed_stay/
-│   ├── failed_update/
-│   └── failed_isolation/
-├── task_a_9B_train_cases/
-├── task_a_9B_test_cases/
-├── task_b_7B_train_cases/
-├── task_b_7B_test_cases/
-├── task_b_9B_train_cases/
-└── task_b_9B_test_cases/
+```bash
+hf download zjunlp/BeliefTrackDataset \
+  --repo-type=dataset \
+  --local-dir ./data/
 ```
+
+The released train/test cases are organized under `data/`:
 
 Each test split is evaluated with a strict repeat protocol over:
 
@@ -88,78 +79,28 @@ Each test split is evaluated with a strict repeat protocol over:
 - `failed_update`
 - `failed_isolation`
 
-Generated analysis outputs are written under:
-
-```text
-data/analysis_results/
-data/eval_results/
-data/probing_results/
-data/steering_results/
-analysis/depth_and_noise/outputs/
-analysis/probing/outputs/
-```
-
-To export a Hugging Face Dataset-friendly package:
-
-```bash
-python scripts/export_hf_dataset.py
-```
-
-This writes `data/belieftrack_hf/` with loadable configurations. The primary 9B configurations are:
-
-```text
-task_a_9b/train.jsonl
-task_a_9b/test.jsonl
-task_b_9b/train.jsonl
-task_b_9b/test.jsonl
-```
-
-The generated directory also includes a Hugging Face dataset card at `data/belieftrack_hf/README.md`.
-
 ## Training
-
-Training uses multi-turn online GRPO with task-specific symbolic rewards.
 
 ### Task A: Rule Discovery
 
 ```bash
 MODEL=/path/to/Qwen3.5-9B \
-DATASET=data/task_a_9B_train_cases/train_cases_9B_thinking.json \
+DATASET=data/Task_A/9B/train/train_cases_9B_thinking.json \
 OUTPUT_DIR=task_a/training/checkpoints_multi_turn_online_swift_grpo \
 TRAIN_GPUS=2,3 \
 VLLM_GPU=1 \
 bash task_a/scripts/run_multi_turn_online_grpo_swift.sh
 ```
 
-The reward entry point is:
-
-```text
-task_a/training/reward.py:task_a_belief_reward
-```
-
 ### Task B: Circuit Diagnosis
 
 ```bash
 MODEL=/path/to/Qwen3.5-9B \
-DATASET=data/task_b_9B_train_cases/train_cases_9B_thinking.json \
+DATASET=data/Task_B/9B/train/train_cases_9B_thinking.json \
 OUTPUT_DIR=task_b/training/checkpoints_multi_turn_online_swift_grpo \
 TRAIN_GPUS=2,3 \
 VLLM_GPU=1 \
 bash task_b/scripts/run_multi_turn_online_grpo_swift.sh
-```
-
-The reward entry point is:
-
-```text
-task_b/training/reward.py
-```
-
-The launcher scripts also provide exact-match variants where available:
-
-```text
-task_a/scripts/run_multi_turn_online_grpo_swift.sh
-task_a/scripts/run_multi_turn_online_grpo_swift_exact_match.sh
-task_b/scripts/run_multi_turn_online_grpo_swift.sh
 ```
 
 ## Evaluation
@@ -216,7 +157,7 @@ More details are in `analysis/depth_and_noise/README.md`.
 
 ```bash
 python analysis/probing/scripts/build_belief_probe_dataset.py \
-  data/task_a_9B_test_cases/failed_stay \
+  data/Task_A/9B/test/failed_stay \
   --scenario a
 
 python analysis/probing/scripts/run_belief_probe_ranking.py \
