@@ -3,11 +3,11 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 cd "$ROOT"
-CONDA_PREFIX=/disk4/xuweihong/envs/miniconda3/envs/swift
-PYTHON_BIN="${PYTHON_BIN:-/disk4/xuweihong/envs/miniconda3/envs/swift/bin/python}"
+CONDA_PREFIX="${CONDA_PREFIX:-/data/xuhaoming/miniconda3/envs/belief_training}"
+PYTHON_BIN="${PYTHON_BIN:-$CONDA_PREFIX/bin/python}"
 export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:${LD_LIBRARY_PATH:-}
-MODEL_7B_PATH="${MODEL_7B_PATH:-/disk1/xuhaoming/models/Qwen2.5-7B-Instruct}"
-MODEL_9B_PATH="${MODEL_9B_PATH:-/disk1/xuhaoming/models/Qwen3.5-9B}"
+MODEL_7B_PATH="${MODEL_7B_PATH:-/mnt/quarkfs/share_model/Qwen2.5-7B-Instruct}"
+MODEL_9B_PATH="${MODEL_9B_PATH:-/mnt/quarkfs/share_model/Qwen3.5-9B}"
 
 GPU_7B="${GPU_7B:-1}"
 GPU_9B="${GPU_9B:-2}"

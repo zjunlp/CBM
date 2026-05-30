@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -39,6 +40,22 @@ PIPELINES = {
 }
 
 TASK_NAMES = {"task_a": "Task_A", "task_b": "Task_B"}
+
+
+def _default_data_root() -> Path:
+    env_root = os.environ.get("BELIEFTRACK_DATA_ROOT")
+    if env_root:
+        return Path(env_root)
+
+    legacy_root = REPO_ROOT / "data" / "belief_training_task_dataset"
+    if legacy_root.exists():
+        return legacy_root
+
+    hf_snapshot_root = REPO_ROOT / "data" / "BeliefTrackDataset"
+    if hf_snapshot_root.exists():
+        return hf_snapshot_root
+
+    return legacy_root
 
 
 def _normalize_task(value: Any) -> str:
@@ -85,7 +102,7 @@ def _resolve_input_dir(args: argparse.Namespace, config: Dict[str, Any]) -> Path
     split = args.split or config.get("split", "test")
     challenge = args.challenge_type or config.get("challenge_type")
     task_name = TASK_NAMES[task]
-    base = REPO_ROOT / "data" / "belief_training_task_dataset" / task_name / model / split
+    base = _default_data_root() / task_name / model / split
     if challenge:
         return base / str(challenge)
     return base

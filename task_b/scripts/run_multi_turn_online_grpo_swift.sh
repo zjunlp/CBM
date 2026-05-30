@@ -7,7 +7,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 cd "$PROJECT_ROOT"
 
-CONDA_PREFIX="${CONDA_PREFIX:-/disk4/xuweihong/envs/miniconda3/envs/swift}"
+CONDA_PREFIX="${CONDA_PREFIX:-/Path/To/conda/envs/swift}"
 export LD_LIBRARY_PATH="$CONDA_PREFIX/lib:${LD_LIBRARY_PATH:-}"
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 export PYTORCH_ALLOC_CONF=expandable_segments:True
@@ -19,9 +19,9 @@ export NCCL_DEBUG=WARN
 SWIFT_BIN=$CONDA_PREFIX/bin/swift
 PYTHON_BIN=$CONDA_PREFIX/bin/python
 
-MODEL=${MODEL:-/disk1/xuhaoming/models/Qwen3.5-9B}
-DATASET=${DATASET:-data/task_b_9B_train_cases/train_cases_9B_thinking.json}
-OUTPUT_DIR=${OUTPUT_DIR:-task_b/training/checkpoints_multi_turn_online_swift_grpo_9B_thinking_rollout_8}
+MODEL=${MODEL:-/Path/To/Qwen3.5-9B}
+DATASET=${DATASET:-/Path/To/data/Task_B/9B/train/train_cases_9B_thinking.json}
+OUTPUT_DIR=${OUTPUT_DIR:-/Path/To/checkpoints_multi_turn_online_swift_grpo_9B_thinking_rollout_8}
 REWARD_PLUGIN=${REWARD_PLUGIN:-task_b/training/reward.py}
 REWARD_FUNC=${REWARD_FUNC:-task_b_belief_reward}
 USE_TEMPLATE_PATCH=${USE_TEMPLATE_PATCH:-1}
@@ -83,8 +83,8 @@ LOGGING_STEPS=${LOGGING_STEPS:-1}
 SEED=${SEED:-42}
 
 REPORT_TO=(${REPORT_TO:-swanlab})
-SWANLAB_PROJECT=${SWANLAB_PROJECT:-belief_training_task_b}
-SWANLAB_EXP_NAME=${SWANLAB_EXP_NAME:-swift_grpo_9B_zero2}
+SWANLAB_PROJECT=${SWANLAB_PROJECT:-/Path/To/project}
+SWANLAB_EXP_NAME=${SWANLAB_EXP_NAME:-/Path/To/exp_name}
 
 LOGDIR=${LOGDIR:-task_b/outputs/multi_turn_online_swift_grpo_logs}
 TRAIN_LOG=${TRAIN_LOG:-$LOGDIR/train.log}
